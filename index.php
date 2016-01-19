@@ -9,7 +9,13 @@
     <link rel="stylesheet" href="css/bootstrap-combined.min.css">
     <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <style>
+    <style type="text/css">
+        body {
+            background-image:url("image/theme.png");
+            background-size: cover;
+            background-repeat:no-repeat;
+            background-attachment:fixed;
+        }
         .hero-unit{
             font-weight: normal;
         }
@@ -29,13 +35,13 @@
                 <div class="header">
                     <ul class="nav nav-pills pull-right">
                         <li>
-                            <a href="#">主页</a>
+                            <a href="./index.php">主页</a>
                         </li>
                         <li>
-                            <a href="#">归档</a>
+                            <a href="./archives.php">归档</a>
                         </li>
                         <li>
-                            <a href="#">about me</a>
+                            <a href="./about.php">about me</a>
                         </li>
                     </ul>
                     <h4 class="text-muted">
@@ -169,6 +175,10 @@
                 </ul>
             </div> 
         </div>
+        <ul class="nav nav-list">
+            <li class="divider"></li>
+            <p class="pull-right">powered by Qsaka</p>
+        </ul>
     </div>
 </body>
 </html>
