@@ -1,3 +1,18 @@
+<?php
+    include "../func.php";
+    session_start();
+    //登陆校验
+    if( !isset($_SESSION['islogin']) || $_SESSION['islogin'] != true){
+        header("location:./login.php");
+        exit();
+    }
+    //注销
+    if( isset($_GET['logout']) && $_GET['logout'] == true){
+        session_destroy();
+        header("location:./login.php");
+        exit();
+    }
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -30,24 +45,18 @@
                         <a href="../index.php">首页</a>
                     </li>
                     <li>
-                        <a href="#">通知</a>
+                        <a href="#">新文章</a>
                     </li>
                     <li>
-                        <a href="#">访客</a>
-                    </li>
-                    <li class="nav-header">
-                        功能列表
+                        <a href="#">留言版</a>
                     </li>
                     <li>
-                        <a href="#">简介</a>
-                    </li>
-                    <li>
-                        <a href="#">文章</a>
+                        <a href="./setting.php">设置</a>
                     </li>
                     <li class="divider">
                     </li>
                     <li>
-                        <a href="#">帮助</a>
+                        <a href="./admin.php?logout=true">注销</a>
                     </li>
                 </ul>
             </div>

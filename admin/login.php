@@ -1,3 +1,15 @@
+<?php
+    include "../config";
+    include "../func.php";
+    //session 过期时间
+    session_set_cookie_params(3600*2);
+    session_start();
+    if( isset($_SESSION['islogin']) && $_SESSION['islogin'] === true){
+        header("location:./admin.php");
+        exit();
+    }
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,6 +36,26 @@
     </style>
 </head>
 <body>
+<?php
+    if( isset($_POST['username']) && isset($_POST['password']) ){
+        $username = $_POST['username'];
+        $password = md5($_POST['password']);
+        try{
+            $conn = connect();
+        }catch(Exception $error){
+            display_message($error->getMessage(),"");
+            exit();
+        }
+        if( auth_login($conn, $username ,$password ) ){
+            $_SESSION['islogin'] = true;
+            header("location:./admin.php");
+        }else{
+            $_SESSION['islogin'] = false;
+            display_message("登陆失败","用户名或密码错误");
+        }
+    }
+
+?>
     <div class="top-content">
         <div class="inner-bg">
             <div class="container">
@@ -36,18 +68,18 @@
                             </div>
                             <div class="form-top-right">
                                 <!-- 头像 -->
-                                <img class="img-rounded" src="image/avatar.jpg" />
+                                <img class="img-rounded" src="../image/avatar.jpg" />
                             </div>
                         </div>
                         <div class="form-bottom">
                              <form role="form" action="" method="post" class="login-form">
                                  <div class="form-group">
                                     <label class="sr-only" for="form-username">Username</label>
-                                    <input type="text" name="form-username" placeholder="Username..." class="form-username form-control" id="form-username">
+                                    <input type="text" name="username" placeholder="Username..." class="form-username form-control" id="form-username">
                                  </div>
                                  <div class="form-group">
                                     <label class="sr-only" for="form-password">Password</label>
-                                    <input type="password" name="form-password" placeholder="Password..." class="form-password form-control" id="form-password">
+                                    <input type="password" name="password" placeholder="Password..." class="form-password form-control" id="form-password">
                                  </div>
                                  <button type="submit" class="btn">Sign in!</button>
                              </form>
@@ -58,4 +90,4 @@
         </div>       
     </div>
 </body>
-
+</html>
