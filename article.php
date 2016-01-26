@@ -1,12 +1,11 @@
 <?php
-    // 初始化
-    if(!file_exists("config")){
-        header("location:./install.php");
-        exit();
-    }
-
     include "./config";
     include "./func.php";
+    if( isset($_GET['id']) && is_num($_GET['id'])){
+        $id = $_GET['id'];
+    }else{
+        exit();
+    }
 
     try{
         $conn = connect();
@@ -16,19 +15,10 @@
     }
 
     $nickname = get_nickname($conn);
-    //获取页面参数
-    if( isset($_GET['page']) && is_num($_GET['page'])){
-        $page = $_GET['page'];
-    }else{
-        $page = 1;
-    }
 
-    $PAGESIZE = 5; 
-    $pages = ceil(get_rows($conn) / $PAGESIZE) ;
-    $offset = $PAGESIZE*($page-1);
-    $select = "select * from article order by id desc limit $offset,$PAGESIZE";
-    $result = $conn->query($select);
-
+    $select = "select title, content, date from article where `id` = '$id';";
+    $result =$conn->query($select);
+    $array = mysqli_fetch_row($result);
 ?>
 <!DOCTYPE html>
 <html>
@@ -92,54 +82,19 @@
                 </div>
             </div>
         </div>
-        <!-- 文章内容-->
-        <?php
-            while ( $array = mysqli_fetch_row($result) ) {
-        ?>
+
         <div class="row-fluid">
             <div class="span2"></div>
             <div class="span8">
                 <div class="hero-unit">
-                    <h3><?php echo $array[1];?></h3>
+                    <h3><?php echo $array[0];?></h3>
                     <p>    
-                        <?php echo mb_substr($array[2],0,140,'utf8');?>
+                        <?php echo $array[1];?>
                     </p>
-                    <p>
-                         <a class="btn btn-primary pull-right" href=<?php echo './article.php?id='.$array[0];?>>Read More »</a>
-                    </p>
-                </div>
-
-            </div>
-        </div>
-        <?php
-            }
-            ?>
-        <!-- 文章部分 结束 -->
-
-        <!-- 分页 -->
-        <div class="row-fluid">
-            <div class="span2"></div> 
-            <div class="span8">
-                <div class="pagination pull-left">
-                    <ul>
-                        <li>
-                            <a href=<?php echo './index.php?page='.($page-1<=0 ? $page : $page-1);?>>上一页</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="pagination pull-right">
-                    <ul>
-                        <li>
-                            <a href=<?php echo './index.php?page='.($page+1 > $pages ? $page : $page+1 );?>>下一页</a>
-                        </li>
-                    </ul>
                 </div>
             </div>
         </div>
-        <ul class="nav nav-list ">
-            <li class="divider"></li>
-            <p class="pull-right">powered by Qsaka</p>
-        </ul>
+
     </div>
 </body>
 </html>

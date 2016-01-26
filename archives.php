@@ -1,3 +1,20 @@
+<?php
+    include "./config";
+    include "./func.php";
+
+    try{
+        $conn = connect();
+    }catch(Exception $error){
+        display_message($error->getMessage(),"","error");
+        exit();
+    }
+
+    $nickname = get_nickname($conn);
+    $count = get_rows($conn);
+    $select = "select * from article;";
+    $result = $conn->query($select);
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -45,7 +62,7 @@
                         </li>
                     </ul>
                     <h4 class="text-muted">
-                        <small>Qsaka</small>
+                        <small><?php echo $nickname;?></small>
                     </h4>
                 </div>
                 <div class="jumbotron">
@@ -61,11 +78,48 @@
             </div>
         </div>
         <!-- 列表显示 -->
+<?php 
+    $i=0;
+    while ( $array = mysqli_fetch_row($result) ) {
+        if($i%3 == 0){
+            echo '
         <div class="row-fluid">
             <div class="span2"></div>
             <div class="col-xs-6 span8">
+                <ul class="thumbnails">';
+        }
+        echo '
+                    <li class="span4">
+                        <div class="thumbnail">
+                            <div class="caption">
+                                <h4>
+                                     '.$array[1].'
+                                </h4>
+                                <p>
+                                    '.mb_substr($array[2],0,12,'utf8').'
+                                </p>
+                                <p>
+                                    <a class="btn btn-link btn-xs" href="./article.php?id='.$array[0].'">Read More »</a> 
+                                </p>
+                            </div>
+                        </div>
+                    </li>';
+                    $i++;
+        if($i%3 == 0 || $i==$count){
+            echo '
+                </ul> 
+            </div>
+        </div>';
+        }
+        
+    }
+
+?>
+<!--         <div class="row-fluid">
+            <div class="span2"></div>
+            <div class="span8">
                 <ul class="thumbnails">
-                    <li class="span2">
+                    <li class="span4">
                         <div class="thumbnail">
                             <div class="caption">
                                 <h3>
@@ -75,7 +129,67 @@
                                     Bacon ipsum dolor sit amet doner ham leberkas short loin hamburger
                                 </p>
                                 <p>
-                                    <a class="btn btn-primary" href="#">Read More »</a> 
+                                    <a class="btn btn-link" href="#">Read More »</a> 
+                                </p>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="span4">
+                        <div class="thumbnail">
+                            <div class="caption">
+                                <h3>
+                                    缩略图标题
+                                </h3>
+                                <p>
+                                    Bacon ipsum dolor sit amet doner ham leberkas short loin hamburger
+                                </p>
+                                <p>
+                                    <a class="btn btn-link" href="#">Read More »</a> 
+                                </p>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="span4">
+                        <div class="thumbnail">
+                            <div class="caption">
+                                <h3>
+                                    缩略图标题
+                                </h3>
+                                <p>
+                                    Bacon ipsum dolor sit amet doner ham leberkas short loin hamburger
+                                </p>
+                                <p>
+                                    <a class="btn btn-link" href="#">Read More »</a> 
+                                </p>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="span4">
+                        <div class="thumbnail">
+                            <div class="caption">
+                                <h3>
+                                    缩略图标题
+                                </h3>
+                                <p>
+                                    Bacon ipsum dolor sit amet doner ham leberkas short loin hamburger
+                                </p>
+                                <p>
+                                    <a class="btn btn-link" href="#">Read More »</a> 
+                                </p>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="span4">
+                        <div class="thumbnail">
+                            <div class="caption">
+                                <h3>
+                                    缩略图标题
+                                </h3>
+                                <p>
+                                    Bacon ipsum dolor sit amet doner ham leberkas short loin hamburger
+                                </p>
+                                <p>
+                                    <a class="btn btn-link" href="#">Read More »</a> 
                                 </p>
                             </div>
                         </div>
@@ -150,65 +264,14 @@
                                     Bacon ipsum dolor sit amet doner ham leberkas short loin hamburger
                                 </p>
                                 <p>
-                                    <a class="btn btn-primary" href="#">Read More »</a> 
+                                    <a class="btn btn-link btn-sm" href="#">Read More »</a> 
                                 </p>
                             </div>
                         </div>
                     </li>
                 </ul>
-            </div>
-        </div>
-        <div class="row-fluid">
+            </div> -->
             <div class="span2"></div>
-            <div class="col-xs-6 span8">
-                <ul class="thumbnails">
-                    <li class="span2">
-                        <div class="thumbnail">
-                            <div class="caption">
-                                <h3>
-                                    缩略图标题
-                                </h3>
-                                <p>
-                                    Bacon ipsum dolor sit amet doner ham leberkas short loin hamburger
-                                </p>
-                                <p>
-                                    <a class="btn btn-primary" href="#">Read More »</a> 
-                                </p>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="span2">
-                        <div class="thumbnail">
-                            <div class="caption">
-                                <h3>
-                                    缩略图标题
-                                </h3>
-                                <p>
-                                    Bacon ipsum dolor sit amet doner ham leberkas short loin hamburger
-                                </p>
-                                <p>
-                                    <a class="btn btn-primary" href="#">Read More »</a> 
-                                </p>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="span2">
-                        <div class="thumbnail">
-                            <div class="caption">
-                                <h3>
-                                    缩略图标题
-                                </h3>
-                                <p>
-                                    Bacon ipsum dolor sit amet doner ham leberkas short loin hamburger
-                                </p>
-                                <p>
-                                    <a class="btn btn-primary" href="#">Read More »</a> 
-                                </p>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
         </div>
         <ul class="nav nav-list">
             <li class="divider"></li>

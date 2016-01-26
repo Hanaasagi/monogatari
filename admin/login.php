@@ -43,7 +43,7 @@
         try{
             $conn = connect();
         }catch(Exception $error){
-            display_message($error->getMessage(),"");
+            display_message($error->getMessage(),"","error");
             exit();
         }
         if( auth_login($conn, $username ,$password ) ){
@@ -51,7 +51,7 @@
             header("location:./admin.php");
         }else{
             $_SESSION['islogin'] = false;
-            display_message("登陆失败","用户名或密码错误");
+            display_message("登陆失败","用户名或密码错误","error");
         }
     }
 

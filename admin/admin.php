@@ -1,4 +1,5 @@
 <?php
+    include "../config";
     include "../func.php";
     session_start();
     //登陆校验
@@ -12,6 +13,28 @@
         header("location:./login.php");
         exit();
     }
+    //page
+    if( isset($_GET['page']) ){
+        $page = $_GET['page'];
+    }else{
+        $page = 1;
+    }
+
+    try{
+        $conn = connect();
+    }catch(Exception $error){
+        display_message($error->getMessage(),"","error");
+        exit();
+    }
+
+    $PAGESIZE = 6; 
+    $count = get_rows($conn);
+    $pages = ceil($count / $PAGESIZE) ;
+
+    $offset = $PAGESIZE*($page-1);
+    
+    $select = "select * from article order by id desc limit $offset,$PAGESIZE;";
+    $result = $conn->query($select);
 ?>
 <!DOCTYPE html>
 <html>
@@ -32,10 +55,23 @@
             background-attachment:fixed;
         }
     </style>
+    <script type="text/javascript">
+        function submitForm(action,id){
+            document.getElementById('id').value = id;
+            if(action === 'del'){
+                document.getElementById('action').value = "del";
+                document.getElementById('form').action = '../core.php';
+            }else if(action === 'edit'){
+                document.getElementById('action').value = 'edit';
+                document.getElementById('form').action = './edit.php';
+            }
+            $('form').submit();
+        }
+    </script>
 </head>
 <body>
     <div class="container-fluid">
-        <div class="row-fluid" style="margin-top:5%">
+        <div class="row-fluid" style="margin-top:5%;">
             <div class="col-xs-6 span2">
                 <ul class="nav nav-list">
                     <li class="nav-header">
@@ -45,7 +81,7 @@
                         <a href="../index.php">首页</a>
                     </li>
                     <li>
-                        <a href="#">新文章</a>
+                        <a href="./edit.php">新文章</a>
                     </li>
                     <li>
                         <a href="#">留言版</a>
@@ -61,100 +97,55 @@
                 </ul>
             </div>
             <div class="col-xs-6 span9">
-                <ul class="thumbnails">
+                <form id="form" action="" method="POST">
+                    <input type="hidden" name="id" id="id" value="" />
+                    <input type="hidden" name="action" id="action" value="" />
+                </form>
+<?php
+    $i = 0;
+    while( ($array = mysqli_fetch_row($result)) && $i<6){
+        if($i%3 == 0){
+            echo '
+                <ul class="thumbnails">';
+        }
+        echo '
                     <li class="span4">
                         <div class="thumbnail">
                             <div class="caption">
                                 <h3>
-                                    缩略图标题
+                                    '.$array[1].'
                                 </h3>
                                 <p>
-                                    Bacon ipsum dolor sit amet doner ham leberkas short loin hamburger, flank drumstick corned beef. Doner meatball venison bresaola biltong chicken. Turkey bacon shoulder strip steak spare ribs tri-tip. Rump ground round strip steak kielbasa short loin t-bone. Biltong capicola corned beef, ribeye chuck andouille sausage ham hock turkey spare ribs beef tail sirloin shank.
+                                    '.mb_substr($array[2],0,70,'utf8').'
                                 </p>
-                                <p>
-                                    <a class="btn btn-danger " href="#">delete</a> <a class="btn btn-primary pull-right" href="#">edit</a>
-                                </p>
+                                <button class="btn btn-danger" onclick="submitForm(\'del\','.$array[0].')">delete</button>
+                                <button class="btn btn-primary pull-right" onclick="submitForm(\'edit\','.$array[0].')">edit</button>
                             </div>
                         </div>
-                    </li>
-                    <li class="span4">
-                        <div class="thumbnail">
-                            <div class="caption">
-                                <h3>
-                                    缩略图标题
-                                </h3>
-                                <p>
-                                    Bacon ipsum dolor sit amet doner ham leberkas short loin hamburger, flank drumstick corned beef. Doner meatball venison bresaola biltong chicken. Turkey bacon shoulder strip steak spare ribs tri-tip. Rump ground round strip steak kielbasa short loin t-bone. Biltong capicola corned beef, ribeye chuck andouille sausage ham hock turkey spare ribs beef tail sirloin shank.
-                                </p>
-                                <p>
-                                    <a class="btn btn-danger " href="#">delete</a> <a class="btn btn-primary pull-right" href="#">edit</a>
-                                </p>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="span4">
-                        <div class="thumbnail">
-                            <div class="caption">
-                                <h3>
-                                    缩略图标题
-                                </h3>
-                                <p>
-                                    Bacon ipsum dolor sit amet doner ham leberkas short loin hamburger, flank drumstick corned beef. Doner meatball venison bresaola biltong chicken. Turkey bacon shoulder strip steak spare ribs tri-tip. Rump ground round strip steak kielbasa short loin t-bone. Biltong capicola corned beef, ribeye chuck andouille sausage ham hock turkey spare ribs beef tail sirloin shank.
-                                </p>
-                                <p>
-                                    <a class="btn btn-danger " href="#">delete</a> <a class="btn btn-primary pull-right" href="#">edit</a>
-                                </p>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-                <ul class="thumbnails">
-                    <li class="span4">
-                        <div class="thumbnail">
-                            <div class="caption">
-                                <h3>
-                                    缩略图标题
-                                </h3>
-                                <p>
-                                    Bacon ipsum dolor sit amet doner ham leberkas short loin hamburger, flank drumstick corned beef. Doner meatball venison bresaola biltong chicken. Turkey bacon shoulder strip steak spare ribs tri-tip. Rump ground round strip steak kielbasa short loin t-bone. Biltong capicola corned beef, ribeye chuck andouille sausage ham hock turkey spare ribs beef tail sirloin shank.
-                                </p>
-                                <p>
-                                    <a class="btn btn-danger " href="#">delete</a> <a class="btn btn-primary pull-right" href="#">edit</a>
-                                </p>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="span4">
-                        <div class="thumbnail">
-                            <div class="caption">
-                                <h3>
-                                    缩略图标题
-                                </h3>
-                                <p>
-                                    Bacon ipsum dolor sit amet doner ham leberkas short loin hamburger, flank drumstick corned beef. Doner meatball venison bresaola biltong chicken. Turkey bacon shoulder strip steak spare ribs tri-tip. Rump ground round strip steak kielbasa short loin t-bone. Biltong capicola corned beef, ribeye chuck andouille sausage ham hock turkey spare ribs beef tail sirloin shank.
-                                </p>
-                                <p>
-                                    <a class="btn btn-primary pull-right" href="#">edit</a> <a class="btn btn-danger  " href="#">delete</a>
-                                </p>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="span4">
-                        <div class="thumbnail">
-                            <div class="caption">
-                                <h3>
-                                    缩略图标题
-                                </h3>
-                                <p>
-                                    Bacon ipsum dolor sit amet doner ham leberkas short loin hamburger, flank drumstick corned beef. Doner meatball venison bresaola biltong chicken. Turkey bacon shoulder strip steak spare ribs tri-tip. Rump ground round strip steak kielbasa short loin t-bone. Biltong capicola corned beef, ribeye chuck andouille sausage ham hock turkey spare ribs beef tail sirloin shank.
-                                </p>
-                                <p>
-                                    <a class="btn btn-danger " href="#">delete</a> <a class="btn btn-primary pull-right" href="#">edit</a>
-                                </p>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
+                    </li>';
+
+        $i++;
+        if($i%3 ==0 ){
+            echo '
+                </ul>';
+        }
+    }
+?>              
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span2"></div> 
+            <div class="span8">
+                <div class="pagination pull-right">
+                    <ul>
+                        <li>
+                            <a href=<?php echo './admin.php?page='.($page-1<=0 ? $page : $page-1);?>>上一页</a>
+                        </li>
+                        <li>
+                            <a href=<?php echo './admin.php?page='.($page+1 > $pages ? $page : $page+1 );?>>下一页</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

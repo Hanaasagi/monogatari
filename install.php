@@ -26,7 +26,7 @@
             $create_table = "create table `master` ( `nickname` varchar(32),`username` varchar(32), `password` varchar(32) ,`profile` text)DEFAULT CHARSET=utf8;";
             $conn->query($create_table);
 
-            $create_table = "create table `article` ( `id` int not null primary key ,`title` varchar(128) ,`content` text , `date` timestamp default current_timestamp)DEFAULT CHARSET=utf8;";
+            $create_table = "create table `article` ( `id` int not null primary key auto_increment,`title` varchar(128) ,`content` text , `date` timestamp default current_timestamp)DEFAULT CHARSET=utf8;";
             $conn->query($create_table);
 
             $insert_info = "insert into master (`nickname`,`username`,`password`,`profile`) values ('$nickname','$username','$password','$profile');";

@@ -1,4 +1,5 @@
 <?php
+    include "../func.php";
     session_start();
     //登陆校验
     if( !isset($_SESSION['islogin']) || $_SESSION['islogin'] != true){
@@ -27,12 +28,23 @@
     </style>
 </head>
 <body>
+<?php
+    if( isset($_GET['success']) ){
+        display_message("update success","","success");
+    }else if( isset($_GET['failed']) ){
+        display_message("update failed","","error");
+    }
+?>
     <div class="container-fluid">
+        <div class="row-fluid">
+                <h4><a href="./admin.php">Admin page</a></h4>
+        </div>
         <div class="row-fluid" style="margin-top:10%">
             <div class="span2"></div>
             <div class="span6" style="color:#FFFFFF">
                 <h3>个人信息修改</h3>
-                <form class="form-horizontal" action="" method="POST">
+                <form class="form-horizontal" action="../core.php" method="POST">
+                    <input type="hidden" name="action" value="updateSetting"> 
                     <div class="control-group">
                         <label class="control-label">nickname</label>
                         <div class="controls" >
@@ -60,7 +72,7 @@
                     <div class="control-group">
                         <label class="control-label">profile</label>
                         <div class="controls">
-                             <textarea  rows="4" style="resize: none"></textarea>
+                             <textarea name="profile" rows="4" style="resize: none"></textarea>
                         </div>
                     </div>
                     <span class="help-block" style="font-style: italic">空白项则保持不变</span> 
@@ -72,5 +84,6 @@
                 </form>
             </div>
         </div>
+    </div>
 </body>
 </html>
